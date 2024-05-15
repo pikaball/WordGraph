@@ -5,13 +5,12 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class InteractiveGraph extends JFrame {
     private mxGraph graph;
     private Object parent;
     private mxGraphComponent graphComponent;
+    public Words graph_root;
 
     public InteractiveGraph() {
         super("Interactive Directed Graph");
