@@ -94,7 +94,7 @@ public class InteractiveGraph extends JFrame {
         return null;
     }
 
-    private void addNode(String nodeName) {
+    public void addNode(String nodeName) {
         if (!nodeName.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
@@ -106,7 +106,7 @@ public class InteractiveGraph extends JFrame {
         }
     }
 
-    private void connectNodes(String fromNode, String toNode) {
+    public void connectNodes(String fromNode, String toNode) {
         if (!fromNode.isEmpty() && !toNode.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
