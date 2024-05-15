@@ -16,7 +16,9 @@ class WordNode{
         valuelist = new ArrayList<>();
         nextlist = new ArrayList<>();
     }
-    private int findNode(String nodewords) {
+    // 根据String查找本结点是否有对应的后继结点
+    // 返回-1表示没找到，非-1表示对应的在nextlist中的索引
+    public int findNextNode(String nodewords) {
         for(int i = 0; i<num ; i++){
             if(nextlist.get(i).words.equals(nodewords)){
                 return i;
@@ -24,15 +26,18 @@ class WordNode{
         }
         return -1;
     }
+    // 在图像上加边
     public void addVertexGraph(InteractiveGraph graph){
         WordNode tmp;
         for (int i = 0; i < num; i++) {
             tmp = nextlist.get(i);
-            graph.connectNodes(tmp.words, this.words);
+            graph.connectNodes(this.words, tmp.words);
         }
     }
+    // 在数据结构中加边
     public void addVertex(WordNode nextone){
-        int idx = findNode(nextone.words);
+//        System.out.println(this.words + " " + nextone.words);
+        int idx = findNextNode(nextone.words);
         if(idx == -1){
             nextlist.add(nextone);
             valuelist.add(1);
@@ -43,7 +48,15 @@ class WordNode{
             valuelist.set(idx, tmp+1);
         }
     }
+
+
+    public List<WordNode> getNextlist(){
+        return this.nextlist;
+    }
 }
+
+
+
 
 public class Words {
     WordNode root; // 有向图入口
@@ -53,15 +66,69 @@ public class Words {
         root=null;
         nodelist = new ArrayList<>();
         num = 0 ;
+        List<String> bridgewords = new ArrayList<>();
         readFromFile("D:\\javaproject\\WordGraph\\src\\main\\java\\org\\hit\\test.txt");
-        drawGraph();
+//        showDirectedGraph(this);
+        bridgewords = queryBridgeWords("exciting","synergies");
     }
-    private void drawGraph(){
+
+    // 需求3 查询桥接词
+    // 返回一个包含着所有桥接词的List
+    public List<String> queryBridgeWords(String word1,String word2) {
+        WordNode node1=null;
+        WordNode node2=null;
+        List<String> bridgeWords = new ArrayList<>();
+        for (WordNode node : this.nodelist) {
+            if (node.words.equals(word1)) {
+                node1 = node;
+                break;
+            }
+        }
+        for (WordNode node : this.nodelist) {
+            if (node.words.equals(word2)) {
+                node2 = node;
+                break;
+            }
+        }
+        if (node1 == null && node2 != null){
+            // 输出报错信息
+            System.out.println("[-] No \""+word1+"\""+"in the graph");
+            return null;
+        }
+        if (node1 != null && node2 == null){
+            System.out.println("[-] No \""+word2+"\" in the graph");
+            return null;
+        }
+        if(node1 == null){
+            System.out.println("[-] No \""+word1+"\" and \""+ word2 +"\" in the graph");
+            return null;
+        }
+        List<WordNode> middlelist = new ArrayList<>(node1.getNextlist());
+        for (WordNode node : middlelist){
+//            System.out.println(node.words);
+            if (node.findNextNode(word2) != -1){
+                bridgeWords.add(node.words);
+            }
+        }
+        if (bridgeWords.isEmpty()){
+            System.out.println("[-] No bridge words from \""+word1+"\" to \""+word2+"\"");
+        }
+        else{
+            System.out.print("[+] The bridge words from \""+word1+"\" to \""+word2+"\" is: ");
+            for (String output: bridgeWords){
+                System.out.print(output+" ");
+            }
+            System.out.print("\n");
+        }
+        return bridgeWords;
+    }
+    // 需求2 绘制有向图
+    public void showDirectedGraph(Words entry){
         InteractiveGraph tmp = new InteractiveGraph();
-        for(WordNode node : nodelist){
+        for(WordNode node : entry.nodelist){
             tmp.addNode(node.words);
         }
-        for(WordNode node : nodelist){
+        for(WordNode node : entry.nodelist){
             node.addVertexGraph(tmp);
         }
     }
@@ -99,7 +166,7 @@ public class Words {
                             WordNode c_node = findNode(cur_input);
 //                            System.out.println(tmp.words);
                             if (c_node!=null && f_node!= null){
-                                c_node.addVertex(f_node);
+                                f_node.addVertex(c_node);
                             }
                             former_input = cur_input;
                         }
