@@ -5,24 +5,24 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class InteractiveGraph extends JFrame {
+public class Window extends JFrame {
     private mxGraph graph;
     private Object parent;
     private mxGraphComponent graphComponent;
 
-    public InteractiveGraph() {
+    public Window() {
         super("Interactive Directed Graph");
 
         graph = new mxGraph();
         parent = graph.getDefaultParent();
 
+
         // 界面布局：顶部为操作区域，中部为图形展示区域
         setLayout(new BorderLayout());
 
         graphComponent = new mxGraphComponent(graph);
+        graphComponent.setBorder(BorderFactory.createEmptyBorder(10, 10,0,0));
         add(graphComponent, BorderLayout.CENTER);
 
         JPanel controlPanel = new JPanel();
@@ -31,9 +31,9 @@ public class InteractiveGraph extends JFrame {
         // 添加节点控件
         JLabel nodeNameLabel = new JLabel("Node Name:");
         JTextField nodeNameField = new JTextField();
-        nodeNameField.addActionListener(e -> addNode(nodeNameField.getText()));
+        nodeNameField.addActionListener(e -> addNode(nodeNameField));
         JButton addNodeButton = new JButton("Add Node");
-        addNodeButton.addActionListener(e -> addNode(nodeNameField.getText()));
+        addNodeButton.addActionListener(e -> addNode(nodeNameField));
         JPanel nodePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         nodePanel.add(nodeNameLabel);
         nodePanel.add(nodeNameField);
@@ -43,10 +43,10 @@ public class InteractiveGraph extends JFrame {
         JLabel toNodeLabel = new JLabel("To Node:");
         JTextField fromNodeField = new JTextField();
         JTextField toNodeField = new JTextField();
-        fromNodeField.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
-        toNodeField.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
+        fromNodeField.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
+        toNodeField.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
         JButton addEdgeButton = new JButton("Connect Nodes");
-        addEdgeButton.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
+        addEdgeButton.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
         JPanel edgePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         edgePanel.add(fromNodeLabel);
         edgePanel.add(fromNodeField);
@@ -73,7 +73,7 @@ public class InteractiveGraph extends JFrame {
         add(controlPanel, BorderLayout.NORTH);
 
         // 窗口属性设置
-        pack();
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -94,7 +94,8 @@ public class InteractiveGraph extends JFrame {
         return null;
     }
 
-    private void addNode(String nodeName) {
+    private void addNode(JTextField nodeField) {
+        String nodeName = nodeField.getText();
         if (!nodeName.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
@@ -102,28 +103,29 @@ public class InteractiveGraph extends JFrame {
                 applyLayout();
             } finally {
                 graph.getModel().endUpdate();
+                nodeField.setText("");
             }
         }
     }
 
-    private void connectNodes(String fromNode, String toNode) {
-        if (!fromNode.isEmpty() && !toNode.isEmpty()) {
+    private void connectNodes(JTextField fromNode, JTextField toNode) {
+        String fromName = fromNode.getText();
+        String toName = toNode.getText();
+        if (!fromName.isEmpty() && !toName.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
-                Object source = findVertexByName(fromNode);
-                Object target = findVertexByName(toNode);
+                Object source = findVertexByName(fromName);
+                Object target = findVertexByName(toName);
                 if (source != null && target != null) {
                     graph.insertEdge(parent, null, "", source, target);
                     applyLayout();
                 }
             } finally {
                 graph.getModel().endUpdate();
+                fromNode.setText("");
+                toNode.setText("");
             }
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(InteractiveGraph::new);
     }
 }
 
