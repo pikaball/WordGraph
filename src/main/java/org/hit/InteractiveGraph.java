@@ -6,13 +6,13 @@ import com.mxgraph.view.mxGraph;
 import javax.swing.*;
 import java.awt.*;
 
-public class Window extends JFrame {
+public class InteractiveGraph extends JFrame {
     private mxGraph graph;
     private Object parent;
     private mxGraphComponent graphComponent;
     public Words graph_root;
 
-    public Window() {
+    public InteractiveGraph() {
         super("Interactive Directed Graph");
 
         graph = new mxGraph();
@@ -32,9 +32,9 @@ public class Window extends JFrame {
         // 添加节点控件
         JLabel nodeNameLabel = new JLabel("Node Name:");
         JTextField nodeNameField = new JTextField();
-        nodeNameField.addActionListener(e -> addNode(nodeNameField));
+        nodeNameField.addActionListener(e -> addNode(nodeNameField.getText()));
         JButton addNodeButton = new JButton("Add Node");
-        addNodeButton.addActionListener(e -> addNode(nodeNameField));
+        addNodeButton.addActionListener(e -> addNode(nodeNameField.getText()));
         JPanel nodePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         nodePanel.add(nodeNameLabel);
         nodePanel.add(nodeNameField);
@@ -44,10 +44,10 @@ public class Window extends JFrame {
         JLabel toNodeLabel = new JLabel("To Node:");
         JTextField fromNodeField = new JTextField();
         JTextField toNodeField = new JTextField();
-        fromNodeField.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
-        toNodeField.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
+        fromNodeField.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
+        toNodeField.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
         JButton addEdgeButton = new JButton("Connect Nodes");
-        addEdgeButton.addActionListener(e -> connectNodes(fromNodeField, toNodeField));
+        addEdgeButton.addActionListener(e -> connectNodes(fromNodeField.getText(), toNodeField.getText()));
         JPanel edgePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         edgePanel.add(fromNodeLabel);
         edgePanel.add(fromNodeField);
@@ -103,7 +103,6 @@ public class Window extends JFrame {
                 applyLayout();
             } finally {
                 graph.getModel().endUpdate();
-                nodeField.setText("");
             }
         }
     }
@@ -112,16 +111,14 @@ public class Window extends JFrame {
         if (!fromNode.isEmpty() && !toNode.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
-                Object source = findVertexByName(fromName);
-                Object target = findVertexByName(toName);
+                Object source = findVertexByName(fromNode);
+                Object target = findVertexByName(toNode);
                 if (source != null && target != null) {
                     graph.insertEdge(parent, null, "", source, target);
                     applyLayout();
                 }
             } finally {
                 graph.getModel().endUpdate();
-                fromNode.setText("");
-                toNode.setText("");
             }
         }
     }
