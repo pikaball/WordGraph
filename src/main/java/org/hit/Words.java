@@ -205,7 +205,9 @@ public class Words {
         output.append(this.nodelist.get(start_idx).words);
         output.append(" ");
         while(true){
-            r = rand.nextInt(cur_node.getNextlist().size());
+            r = cur_node.getNextlist().size();
+            if (r <= 0) break;
+            r = rand.nextInt(r);
             next_node = cur_node.getNextlist().get(r);
             next_idx = this.findIndex(next_node);
             if(used_edge.contains((cur_idx<<16)+next_idx)){

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="WordGraph:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/WordGraph_jar</output-path>
+    <root id="archive" name="WordGraph.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="WordGraph" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/vlsi/mxgraph/jgraphx/4.2.2/jgraphx-4.2.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
