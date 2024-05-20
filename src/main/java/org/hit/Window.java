@@ -10,6 +10,7 @@ public class Window extends JFrame {
     private mxGraph graph;
     private Object parent;
     private mxGraphComponent graphComponent;
+    public Words graph_root;
 
     public Window() {
         super("Interactive Directed Graph");
@@ -94,8 +95,7 @@ public class Window extends JFrame {
         return null;
     }
 
-    private void addNode(JTextField nodeField) {
-        String nodeName = nodeField.getText();
+    public void addNode(String nodeName) {
         if (!nodeName.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
@@ -108,10 +108,8 @@ public class Window extends JFrame {
         }
     }
 
-    private void connectNodes(JTextField fromNode, JTextField toNode) {
-        String fromName = fromNode.getText();
-        String toName = toNode.getText();
-        if (!fromName.isEmpty() && !toName.isEmpty()) {
+    public void connectNodes(String fromNode, String toNode) {
+        if (!fromNode.isEmpty() && !toNode.isEmpty()) {
             graph.getModel().beginUpdate();
             try {
                 Object source = findVertexByName(fromName);
