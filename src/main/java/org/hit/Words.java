@@ -182,7 +182,7 @@ public class Words {
 
         output.append(start.words);
         for(int i = res.size()-1;i>=0;i--){
-            output.append("->");
+            output.append(" -> ");
             output.append(res.get(i));
         }
         return output.toString();

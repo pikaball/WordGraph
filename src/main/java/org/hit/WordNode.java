@@ -34,7 +34,6 @@ class WordNode{
     }
     // 在数据结构中加边
     public void addedge (WordNode nextone){
-//        System.out.println(this.words + " " + nextone.words);
         int idx = findNextNode(nextone.words);
         if(idx == -1){
             nextlist.add(nextone);
