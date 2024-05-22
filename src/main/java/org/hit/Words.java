@@ -128,7 +128,7 @@ public class Words {
             return null;
         }
         
-        // 宽搜
+        // dijkstra
         for (WordNode node: start.getNextlist()) {
             tmp_idx = this.findIndex(node);
             queue.add(tmp_idx);
@@ -214,7 +214,7 @@ public class Words {
                 output.append(next_node.words);
                 break;
             }
-            else{
+            else {
                 used_edge.add((cur_idx<<16)+next_idx);
                 output.append(next_node.words);
                 output.append(" ");
@@ -240,6 +240,9 @@ public class Words {
         return null;
     }
     private int findIndex(WordNode node){
+        if (node == null) {
+            return -1;
+        }
         for (int i =0; i < nodelist.size(); i++){
             if (nodelist.get(i).words.equals(node.words)){
                 return i;
